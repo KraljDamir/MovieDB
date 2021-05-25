@@ -1,21 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Image } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-export default function App() {
+import HomeScreen from './app/screens/HomeScreen';
+import SearchScreen from './app/screens/SearchScreen';
+import MovieDetailsScreen from './app/screens/MovieDetailsScreen';
+import colors from './app/config/colors';
+
+const Stack = createStackNavigator();
+
+function LogoTitle() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Image
+      style={{ width: 143, height: 35 }}
+      source={require('./app/images/tmdb.png')}
+    />
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: colors.primary,
+            height: 100,
+          },
+          headerTitle: <LogoTitle />,
+          headerTruncatedBackTitle: '',
+          headerBackTitle: '',
+        }}
+      >
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Search" component={SearchScreen} />
+        <Stack.Screen name="Details" component={MovieDetailsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+export default App;

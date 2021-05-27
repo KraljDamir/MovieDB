@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -8,22 +8,16 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
+import usePopularMovies from '../hooks/usePopularMovies';
 import MovieItem from '../components/MovieItem';
-import tmdb from '../api/tmdb';
 import colors from '../config/colors';
 
 function HomeScreen({ navigation }) {
-  const API_KEY = '?api_key=4f0f5998660e83f5367c029bc3d7a701';
-
-  const [database, setDatabase] = useState([]);
-
-  const searchApi = async () => {
-    const response = await tmdb.get('/popular' + API_KEY);
-    setDatabase(response.data.results);
-  };
+  const [popularMovies, fetchPopularMovies, fetchMoreMovies] =
+    usePopularMovies();
 
   useEffect(() => {
-    searchApi();
+    fetchPopularMovies();
   }, []);
 
   return (
@@ -41,9 +35,12 @@ function HomeScreen({ navigation }) {
       </TouchableWithoutFeedback>
       <Text style={styles.headline}>What's popular</Text>
       <FlatList
-        data={database}
-        keyExtractor={(database) => database.id.toString()}
+        data={popularMovies}
+        keyExtractor={(popularMovies) => popularMovies.id.toString()}
         numColumns={3}
+        // onEndReached={() => {
+        //   fetchMoreMovies();
+        // }}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => {
           return <MovieItem result={item} navigation={navigation} />;

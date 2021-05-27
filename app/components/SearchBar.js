@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, createRef } from 'react';
 import {
   StyleSheet,
   Text,
@@ -10,9 +10,15 @@ import {
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import colors from '../config/colors';
+import DelayInput from 'react-native-debounce-input';
 
-function SearchBar({ setSearchTerm, navigation }) {
+function SearchBar({ setTextInput, navigation }) {
   const [text, setText] = useState('');
+  const inputRef = createRef();
+
+  useEffect(() => {
+    setTextInput(text);
+  }, [text]);
 
   return (
     <View style={styles.container}>
@@ -23,9 +29,12 @@ function SearchBar({ setSearchTerm, navigation }) {
           color={colors.primary}
           style={styles.searchIcon}
         />
-        <TextInput
+        <DelayInput
           placeholder="Search"
           style={styles.inputText}
+          inputRef={inputRef}
+          delayTimeout={1000}
+          minLength={3}
           value={text}
           onChangeText={setText}
         />

@@ -7,20 +7,17 @@ import HomeScreen from './app/screens/HomeScreen';
 import SearchScreen from './app/screens/SearchScreen';
 import MovieDetailsScreen from './app/screens/MovieDetailsScreen';
 import colors from './app/config/colors';
+import imageSrc from './app/images/tmdb.png';
+import { DatabaseProvider } from './app/context/DatabaseContext';
 
 const Stack = createStackNavigator();
 
-function LogoTitle() {
-  return (
-    <Image
-      style={{ width: 143, height: 35 }}
-      source={require('./app/images/tmdb.png')}
-    />
-  );
-}
+const LogoTitle = () => (
+  <Image style={{ width: 143, height: 35 }} source={imageSrc} />
+);
 
-function App() {
-  return (
+const App = () => (
+  <DatabaseProvider>
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
@@ -38,7 +35,7 @@ function App() {
         <Stack.Screen name="Details" component={MovieDetailsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
-  );
-}
+  </DatabaseProvider>
+);
 
 export default App;

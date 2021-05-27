@@ -1,45 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, View, Text, FlatList } from 'react-native';
+import debounce from 'lodash.debounce';
 
 import SearchBar from '../components/SearchBar';
 import MovieItem from '../components/MovieItem';
-import tmdb from '../api/tmdb';
+import useSearchScreen from '../hooks/useSearchScreen';
+
+const DEBOUNCE_WAIT = 500;
 
 function SearchScreen({ navigation }) {
-  const API_KEY = '?api_key=4f0f5998660e83f5367c029bc3d7a701';
+  const [value, setValue] = useState('');
+  const { movies, setMovies, fetchSearchedMovies } = useSearchScreen();
 
-  const [movies, setMovies] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
+  const handleClear = useCallback(() => {
+    setValue('');
+  }, []);
 
-  const [textInput, setTextInput] = useState('');
+  const search = useCallback(
+    (searchValue) => {
+      if (searchValue.length > 2) {
+        fetchSearchedMovies(searchValue);
+      } else {
+        setMovies([]);
+      }
+    },
+    [fetchSearchedMovies]
+  );
 
-  const fetchSearchedMovies = async (textInput) => {
-    try {
-      const response = await tmdb.get(
-        'search/movie' + API_KEY + '&query=' + textInput
-      );
-      setMovies(response.data.results);
-    } catch (err) {
-      setErrorMessage('Something went wrong!');
-    }
-  };
+  const debouncedSearch = useCallback(debounce(search, DEBOUNCE_WAIT), [
+    search,
+  ]);
 
   useEffect(() => {
-    textInput.length > 2 ? fetchSearchedMovies(textInput) : setMovies([]);
-  }, [textInput]);
+    debouncedSearch(value);
+  }, [debouncedSearch, value]);
 
   return (
     <View style={styles.container}>
-      <SearchBar navigation={navigation} setTextInput={setTextInput} />
-      <Text style={styles.headline}>Showing {movies.length} results </Text>
+      <SearchBar
+        navigation={navigation}
+        onChange={setValue}
+        onClear={handleClear}
+        value={value}
+      />
+      <Text style={styles.headline}>Showing {movies.length} results</Text>
       <FlatList
         data={movies}
-        keyExtractor={(movies) => movies.id.toString()}
+        keyExtractor={({ id }) => id}
         numColumns={3}
         showsVerticalScrollIndicator={false}
-        renderItem={({ item }) => {
-          return <MovieItem result={item} navigation={navigation} />;
-        }}
+        renderItem={({ item }) => (
+          <MovieItem result={item} navigation={navigation} />
+        )}
       />
     </View>
   );

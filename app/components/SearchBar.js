@@ -1,24 +1,29 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useEffect, createRef, useCallback } from 'react';
 import {
   StyleSheet,
   Text,
   TextInput,
   TouchableWithoutFeedback,
   View,
-  Keyboard,
 } from 'react-native';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import colors from '../config/colors';
-import DelayInput from 'react-native-debounce-input';
 
-function SearchBar({ setTextInput, navigation }) {
-  const [text, setText] = useState('');
+function SearchBar({ onChange, onClear, value, navigation }) {
   const inputRef = createRef();
 
   useEffect(() => {
-    setTextInput(text);
-  }, [text]);
+    inputRef.current.focus();
+  }, []);
+
+  const handleClearTextPress = useCallback(() => {
+    onClear();
+  }, []);
+
+  const handleBackPress = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
 
   return (
     <View style={styles.container}>
@@ -29,18 +34,16 @@ function SearchBar({ setTextInput, navigation }) {
           color={colors.primary}
           style={styles.searchIcon}
         />
-        <DelayInput
+        <TextInput
           placeholder="Search"
           style={styles.inputText}
-          inputRef={inputRef}
-          delayTimeout={1000}
-          minLength={3}
-          value={text}
-          onChangeText={setText}
+          ref={inputRef}
+          value={value}
+          onChangeText={onChange}
         />
 
-        {text != '' && (
-          <TouchableWithoutFeedback onPress={() => setText('')}>
+        {value !== '' && (
+          <TouchableWithoutFeedback onPress={handleClearTextPress}>
             <MaterialCommunityIcons
               name="close"
               size={30}
@@ -50,8 +53,8 @@ function SearchBar({ setTextInput, navigation }) {
           </TouchableWithoutFeedback>
         )}
       </View>
-      {text != '' && (
-        <TouchableWithoutFeedback onPress={() => navigation.goBack()}>
+      {value !== '' && (
+        <TouchableWithoutFeedback onPress={handleBackPress}>
           <Text style={styles.cancelText}>Cancel</Text>
         </TouchableWithoutFeedback>
       )}

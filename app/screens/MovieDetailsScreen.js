@@ -1,22 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import colors from '../config/colors';
+import usePopularMovies from '../hooks/usePopularMovies';
 
-function MovieDetailsScreen({ route, navigation }) {
-  const { movieTitle, moviePoster, imgApi, releaseDate, overview } =
-    route.params;
+function MovieDetailsScreen({ route }) {
+  const {
+    movieTitle,
+    moviePoster,
+    imgApi,
+    releaseDate,
+    overview,
+    movieId,
+    movieRuntime,
+  } = route.params;
+  const { fetchMovieDetails, selectedMovie } = usePopularMovies();
 
-  let year = releaseDate.slice(0, -6);
+  useEffect(() => {
+    fetchMovieDetails(movieId);
+  }, [movieId]);
+
+  const { genres = [] } = selectedMovie;
+  const genresText = useMemo(
+    () => genres.map(({ name }) => name).join(', '),
+    [genres]
+  );
+
+  const year = releaseDate.slice(0, -6);
 
   return (
     <View>
-      <Image source={{ uri: imgApi + moviePoster }} style={styles.image} />
+      <Image source={{ uri: `${imgApi}${moviePoster}` }} style={styles.image} />
       <View style={styles.imageSection}>
         <View style={{ flexDirection: 'row', padding: 10 }}>
           <Text style={styles.title}>{movieTitle}</Text>
           <Text style={styles.title}>({year})</Text>
         </View>
         <Text style={styles.date}>{releaseDate}</Text>
+        <Text style={styles.genres}>{genresText}</Text>
       </View>
       <View style={styles.textSection}>
         <Text
@@ -67,7 +87,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
     paddingLeft: 10,
-    paddingBottom: 20,
+    paddingBottom: 5,
+  },
+  genres: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '700',
+    paddingLeft: 10,
+    paddingBottom: 10,
   },
   textSection: {
     paddingHorizontal: 10,

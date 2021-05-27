@@ -1,35 +1,23 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import tmdb from '../api/tmdb';
+import { useDatabase } from '../context/DatabaseContext';
 
 export default () => {
-  const API_KEY = '?api_key=4f0f5998660e83f5367c029bc3d7a701';
+  const { API_KEY } = useDatabase();
 
   const [movies, setMovies] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const fetchSearchedMovies = async () => {
+  const fetchSearchedMovies = useCallback(async (textInput) => {
     try {
       const response = await tmdb.get(
-        '/search/movie' + API_KEY + '&query=' + term
+        `search/movie?api_key=${API_KEY}&query=${textInput}`
       );
-      const search = (term) => {
-        search_movie((api_key = API_KEY), (query = term));
-      };
       setMovies(response.data.results);
     } catch (err) {
       setErrorMessage('Something went wrong!');
     }
-  };
+  }, []);
 
-  const fetchMoreMovies = async () => {
-    try {
-      const response = await tmdb.get('/popular' + API_KEY + '&page=2');
-      console.log(response.data);
-      setPopularMovies((popularMovies) => [...popularMovies, response.data]);
-    } catch (err) {
-      setErrorMessage('Something went wrong!');
-    }
-  };
-
-  return [popularMovies, fetchPopularMovies, fetchMoreMovies, errorMessage];
+  return { movies, setMovies, fetchSearchedMovies, errorMessage };
 };

@@ -13,11 +13,10 @@ import MovieItem from '../components/MovieItem';
 import colors from '../config/colors';
 
 function HomeScreen({ navigation }) {
-  const [popularMovies, fetchPopularMovies, fetchMoreMovies] =
-    usePopularMovies();
+  const { popularMovies, fetchNextPage } = usePopularMovies();
 
   useEffect(() => {
-    fetchPopularMovies();
+    fetchNextPage();
   }, []);
 
   return (
@@ -36,11 +35,9 @@ function HomeScreen({ navigation }) {
       <Text style={styles.headline}>What's popular</Text>
       <FlatList
         data={popularMovies}
-        keyExtractor={(popularMovies) => popularMovies.id.toString()}
+        keyExtractor={({ id }) => id}
         numColumns={3}
-        // onEndReached={() => {
-        //   fetchMoreMovies();
-        // }}
+        onEndReached={fetchNextPage}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => {
           return <MovieItem result={item} navigation={navigation} />;

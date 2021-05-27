@@ -1,19 +1,22 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useDatabase } from '../context/DatabaseContext';
 
-function MovieItem({ result, navigation }) {
-  const IMG_API = 'https://image.tmdb.org/t/p/w500';
+const MovieItem = memo(({ result, navigation }) => {
+  const { IMG_API } = useDatabase();
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         onPress={() =>
           navigation.navigate('Details', {
+            movieId: result.id,
             imgApi: IMG_API,
             movieTitle: result.title,
             moviePoster: result.poster_path,
             releaseDate: result.release_date,
             overview: result.overview,
+            movieRuntime: result.id.runtime,
           })
         }
       >
@@ -26,7 +29,7 @@ function MovieItem({ result, navigation }) {
       </TouchableOpacity>
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   container: {

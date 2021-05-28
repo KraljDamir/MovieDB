@@ -16,7 +16,6 @@ const MovieItem = memo(({ result, navigation }) => {
             moviePoster: result.poster_path,
             releaseDate: result.release_date,
             overview: result.overview,
-            movieRuntime: result.id.runtime,
           })
         }
       >

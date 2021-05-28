@@ -4,15 +4,8 @@ import colors from '../config/colors';
 import usePopularMovies from '../hooks/usePopularMovies';
 
 function MovieDetailsScreen({ route }) {
-  const {
-    movieTitle,
-    moviePoster,
-    imgApi,
-    releaseDate,
-    overview,
-    movieId,
-    movieRuntime,
-  } = route.params;
+  const { movieTitle, moviePoster, imgApi, releaseDate, overview, movieId } =
+    route.params;
   const { fetchMovieDetails, selectedMovie } = usePopularMovies();
 
   useEffect(() => {
@@ -25,6 +18,11 @@ function MovieDetailsScreen({ route }) {
     [genres]
   );
 
+  const movieHours = Math.floor(selectedMovie.runtime / 60);
+  const movieMinutes = selectedMovie.runtime % 60;
+
+  const releaseDateStyled = releaseDate.replace(/-/g, '/');
+
   const year = releaseDate.slice(0, -6);
 
   return (
@@ -35,8 +33,13 @@ function MovieDetailsScreen({ route }) {
           <Text style={styles.title}>{movieTitle}</Text>
           <Text style={styles.title}>({year})</Text>
         </View>
-        <Text style={styles.date}>{releaseDate}</Text>
-        <Text style={styles.genres}>{genresText}</Text>
+        <Text style={styles.date}>{releaseDateStyled}</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.genres}>{genresText}</Text>
+          <Text style={styles.runtime}>
+            {movieHours}h {movieMinutes}m
+          </Text>
+        </View>
       </View>
       <View style={styles.textSection}>
         <Text
@@ -90,6 +93,13 @@ const styles = StyleSheet.create({
     paddingBottom: 5,
   },
   genres: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: '500',
+    paddingLeft: 10,
+    paddingBottom: 10,
+  },
+  runtime: {
     color: 'white',
     fontSize: 18,
     fontWeight: '700',

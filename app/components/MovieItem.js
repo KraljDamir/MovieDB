@@ -1,6 +1,7 @@
 import React, { memo } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useDatabase } from '../context/DatabaseContext';
+import { PropTypes } from 'prop-types';
 
 const MovieItem = memo(({ result, navigation }) => {
   const { IMG_API } = useDatabase();
@@ -43,5 +44,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 });
+
+MovieItem.displayName = 'movie item';
+
+MovieItem.propTypes = {
+  result: PropTypes.shape({
+    id: PropTypes.number,
+    title: PropTypes.string,
+    release_date: PropTypes.string,
+    overview: PropTypes.string,
+    poster_path: PropTypes.string,
+  }),
+  navigation: PropTypes.func,
+};
 
 export default MovieItem;

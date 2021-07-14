@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import PropTypes from 'prop-types';
 
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import colors from '../config/colors';
@@ -93,5 +94,12 @@ const styles = StyleSheet.create({
     color: colors.primary,
   },
 });
+
+SearchBar.propTypes = {
+  onChange: PropTypes.func,
+  onClear: PropTypes.func,
+  value: PropTypes.string,
+  navigation: PropTypes.func,
+};
 
 export default SearchBar;

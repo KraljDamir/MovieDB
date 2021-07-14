@@ -1,4 +1,5 @@
 import React, { useMemo, useContext } from 'react';
+import PropTypes from 'prop-types';
 
 const DatabaseContext = React.createContext();
 
@@ -14,6 +15,10 @@ export const DatabaseProvider = ({ children }) => {
       {children}
     </DatabaseContext.Provider>
   );
+};
+
+DatabaseProvider.propTypes = {
+  children: PropTypes.node,
 };
 
 export const useDatabase = () => useContext(DatabaseContext);

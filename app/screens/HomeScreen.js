@@ -6,6 +6,7 @@ import {
   View,
   TouchableWithoutFeedback,
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import usePopularMovies from '../hooks/usePopularMovies';
@@ -32,7 +33,7 @@ function HomeScreen({ navigation }) {
           <Text style={styles.text}> Search </Text>
         </View>
       </TouchableWithoutFeedback>
-      <Text style={styles.headline}>What's popular</Text>
+      <Text style={styles.headline}>What&apos;s popular</Text>
       <FlatList
         data={popularMovies}
         keyExtractor={({ id }) => id}
@@ -73,5 +74,9 @@ const styles = StyleSheet.create({
     color: '#B2B2B2',
   },
 });
+
+HomeScreen.propTypes = {
+  navigation: PropTypes.func,
+};
 
 export default HomeScreen;

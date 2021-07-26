@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { StyleSheet, View, Text, FlatList } from 'react-native';
 import debounce from 'lodash.debounce';
+import PropTypes from 'prop-types';
 
 import SearchBar from '../components/SearchBar';
 import MovieItem from '../components/MovieItem';
@@ -65,5 +66,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
 });
+
+SearchScreen.propTypes = {
+  navigation: PropTypes.func,
+};
 
 export default SearchScreen;

@@ -1,11 +1,13 @@
 import React, { useEffect, useMemo } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
+import PropTypes from 'prop-types';
 import colors from '../config/colors';
 import usePopularMovies from '../hooks/usePopularMovies';
 
 function MovieDetailsScreen({ route }) {
   const { movieTitle, moviePoster, imgApi, releaseDate, overview, movieId } =
     route.params;
+
   const { fetchMovieDetails, selectedMovie } = usePopularMovies();
 
   useEffect(() => {
@@ -31,7 +33,7 @@ function MovieDetailsScreen({ route }) {
       <View style={styles.imageSection}>
         <View style={{ flexDirection: 'row', padding: 10 }}>
           <Text style={styles.title}>{movieTitle}</Text>
-          <Text style={styles.title}>({year})</Text>
+          <Text style={styles.title}>{year}</Text>
         </View>
         <Text style={styles.date}>{releaseDateStyled}</Text>
         <View style={{ flexDirection: 'row' }}>
@@ -111,5 +113,20 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
 });
+
+MovieDetailsScreen.propTypes = {
+  route: PropTypes.shape({
+    params: {
+      movieTitle: PropTypes.string,
+      moviePoster: PropTypes.string,
+      imgApi: PropTypes.string,
+      releaseDate: PropTypes.string,
+    },
+  }),
+};
+
+/* MovieDetailsScreen.defaultProps = {
+  movieTitle: '',
+}*/
 
 export default MovieDetailsScreen;

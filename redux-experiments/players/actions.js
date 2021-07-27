@@ -1,17 +1,18 @@
 import * as actions from './actionTypes';
 
-export const setPlayerName = (id, name) => ({
-  type: actions.SET_PLAYER_NAME,
+export const addPlayerToGame = (id, name) => ({
+  type: actions.ADD_PLAYER_TO_GAME,
   payload: {
     id,
     name,
   },
 });
 
-export const addPoint = (id) => ({
+export const addPoint = (id, amount) => ({
   type: actions.ADD_POINT,
   payload: {
     id,
+    amount,
   },
 });
 

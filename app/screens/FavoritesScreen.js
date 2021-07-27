@@ -1,22 +1,20 @@
 import React from 'react';
 import { View, StyleSheet, Text, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
-import { favoriteMoviesSelector } from '../redux/selectors';
+import { favoriteMovieListSelector } from '../redux/selectors';
 import { useSelector } from 'react-redux';
 
 import colors from '../config/colors';
 import MovieItem from '../components/MovieItem';
 
 function FavoritesScreen({ navigation }) {
-  const favoritedMovies = useSelector(favoriteMoviesSelector);
-
-  console.log(favoritedMovies);
+  const favoriteMovies = useSelector(favoriteMovieListSelector);
 
   return (
     <View style={styles.container}>
       <Text style={styles.headline}>Favorites</Text>
       <FlatList
-        data={favoritedMovies}
+        data={favoriteMovies}
         keyExtractor={({ id }) => id}
         numColumns={3}
         showsVerticalScrollIndicator={false}

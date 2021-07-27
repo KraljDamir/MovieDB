@@ -7,18 +7,14 @@ export const storeFavoriteId = (movieId) => ({
   },
 });
 
-export const addToFav = (movie) => ({
+export const addToFav = (movieId) => ({
   type: actionTypes.ADD_TO_FAV,
-  payload: {
-    movie,
-  },
+  payload: movieId,
 });
 
-export const removeFromFav = (movie) => ({
+export const removeFromFav = (movieId) => ({
   type: actionTypes.REMOVE_FROM_FAV,
-  payload: {
-    movie,
-  },
+  payload: movieId,
 });
 
 export const storePopularMovies = (movies) => ({
@@ -26,4 +22,9 @@ export const storePopularMovies = (movies) => ({
   payload: {
     movies,
   },
+});
+
+export const storeMovie = (movie) => ({
+  type: actionTypes.STORE_MOVIE,
+  payload: movie,
 });

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -15,10 +15,6 @@ import colors from '../config/colors';
 
 function HomeScreen({ navigation }) {
   const { popularMovies, fetchNextPage } = usePopularMovies();
-
-  useEffect(() => {
-    fetchNextPage();
-  }, []);
 
   return (
     <View style={styles.container}>

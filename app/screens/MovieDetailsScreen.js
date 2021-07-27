@@ -8,10 +8,8 @@ import {
 } from 'react-native';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useDispatch } from 'react-redux';
 
 import colors from '../config/colors';
-import * as actions from '../redux/actions/action';
 import usePopularMovies from '../hooks/usePopularMovies';
 import useFavoriteMovies from '../hooks/useFavoriteMovies';
 
@@ -20,7 +18,7 @@ function MovieDetailsScreen({ route }) {
     route.params;
 
   const { fetchMovieDetails, selectedMovie } = usePopularMovies();
-  const { isFavorited, storeFavoriteMovie } = useFavoriteMovies();
+  const { isFavorite, storeFavoriteMovie } = useFavoriteMovies(movieId);
 
   useEffect(() => {
     fetchMovieDetails(movieId);
@@ -39,12 +37,9 @@ function MovieDetailsScreen({ route }) {
 
   const year = releaseDate.slice(0, -6);
 
-  const dispatch = useDispatch();
-
   const handleFavoriteMovie = useCallback(() => {
-    dispatch(actions.storeFavoriteId(movieId));
     storeFavoriteMovie();
-  }, [movieId]);
+  }, [storeFavoriteMovie]);
 
   return (
     <View>
@@ -64,7 +59,7 @@ function MovieDetailsScreen({ route }) {
         <TouchableWithoutFeedback onPress={handleFavoriteMovie}>
           <View style={styles.favButton}>
             <MaterialCommunityIcons
-              name={isFavorited ? 'star' : 'star-outline'}
+              name={isFavorite ? 'star' : 'star-outline'}
               size={20}
               color={colors.light}
               style={{ alignSelf: 'center' }}

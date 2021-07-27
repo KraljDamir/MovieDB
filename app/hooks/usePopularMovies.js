@@ -13,41 +13,42 @@ export default () => {
 
   const [selectedMovie, setSelectedMovie] = useState({});
   const [errorMessage, setErrorMessage] = useState('');
-  const [page, setPage] = useState(0);
+
+  const [page, setPage] = useState(1);
 
   const fetchNextPage = useCallback(() => {
     setPage((prev) => prev + 1);
   }, []);
 
-  useEffect(() => {
-    fetchPopularMovies();
-  }, [page]);
-
   const dispatch = useDispatch();
 
   const fetchPopularMovies = useCallback(async () => {
-    if (page === 0) {
-      return;
-    }
     try {
       const response = await tmdb.get(
         `movie/popular?api_key=${API_KEY}&page=${page}`
       );
-
       dispatch(actions.storePopularMovies(response.data.results));
     } catch (err) {
       setErrorMessage('Something went wrong!');
     }
   }, [page]);
 
-  const fetchMovieDetails = useCallback(async (movieId) => {
-    try {
-      const response = await tmdb.get(`movie/${movieId}?api_key=${API_KEY}`);
-      setSelectedMovie(response.data);
-    } catch (err) {
-      setErrorMessage('Something went wrong!');
-    }
-  }, []);
+  useEffect(() => {
+    fetchPopularMovies();
+  }, [page]);
+
+  const fetchMovieDetails = useCallback(
+    async (movieId) => {
+      try {
+        const response = await tmdb.get(`movie/${movieId}?api_key=${API_KEY}`);
+        setSelectedMovie(response.data);
+        dispatch(actions.storeMovie(response.data));
+      } catch (err) {
+        setErrorMessage('Something went wrong!');
+      }
+    },
+    [dispatch]
+  );
 
   return {
     popularMovies,

@@ -1,14 +1,22 @@
 export const favoritesSelector = (state) => state.favorites;
 
-export const favoriteMoviesSelector = (state) =>
-  favoritesSelector(state).favoriteMovies;
-
-export const favoritesIdSelector = (state) => state.favoritesId;
-
-export const favoriteMovieIdSelector = (state) =>
-  favoritesIdSelector(state).favoriteMovieId;
+export const favoriteMoviesIdsSelector = (state) =>
+  favoritesSelector(state).favoriteMoviesIds;
 
 export const popularSelector = (state) => state.popular;
 
+export const moviesSelector = (state) => popularSelector(state).movieStorage;
+
+export const favoriteMovieListSelector = (state) => {
+  const favoriteMovieIds = favoriteMoviesIdsSelector(state);
+  const movies = moviesSelector(state);
+
+  return favoriteMovieIds
+    .filter((id) => Boolean(movies[id]))
+    .map((id) => movies[id]);
+};
+
 export const popularMoviesSelector = (state) =>
-  popularSelector(state).popularMoviesList;
+  popularSelector(state).popularMoviesList.map(
+    (id) => moviesSelector(state)[id]
+  );

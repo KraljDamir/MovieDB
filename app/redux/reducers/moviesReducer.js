@@ -1,42 +1,41 @@
-import * as actions from '../actions/actionTypes';
+import { combineReducers } from 'redux';
+import * as actionTypes from '../actions/actionTypes';
 
-export const initialState = {
-  popularMoviesStorage: {},
-  movieStorage: {},
-  popularMoviesList: [],
-};
-
-export const moviesReducer = (state = initialState, action) => {
+const movieStorage = (state = {}, action) => {
   switch (action.type) {
-    case actions.STORE_POPULAR_MOVIES:
+    case actionTypes.STORE_MOVIE:
       return {
         ...state,
-        popularMoviesList: [
-          ...state.popularMoviesList,
-          ...action.payload.movies,
-        ],
+        [action.payload.id]: action.payload,
       };
+
+    case actionTypes.STORE_POPULAR_MOVIES: {
+      const newState = {
+        ...state,
+      };
+
+      action.payload.movies.forEach((movie) => {
+        newState[movie.id] = movie;
+      });
+
+      return newState;
+    }
 
     default:
       return state;
   }
 };
 
-// if (
-//   state.favoriteMovies
-//     .map((m) => Object.keys(m)[0])
-//     .includes(`${action.payload.id}`)
-// ) {
-//   return state;
-// }
+const popularMoviesList = (state = [], action) => {
+  switch (action.type) {
+    case actionTypes.STORE_POPULAR_MOVIES:
+      return [...state, ...action.payload.movies.map((movie) => movie.id)];
+    default:
+      return state;
+  }
+};
 
-// if (state.favoriteMovies.find((id) => id === action.payload.id)) {
-//   const updatedMovies = [...state.favoriteMovies];
-//   updatedMovies.splice(action.payload.id);
-//   return { ...state, favoriteMovies: updatedMovies };
-// }
-
-// return {
-//   ...state,
-//   favoriteMovies: [...state.favoriteMovies, action.payload.id],
-// };
+export const moviesReducer = combineReducers({
+  movieStorage,
+  popularMoviesList,
+});

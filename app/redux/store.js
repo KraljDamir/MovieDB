@@ -5,7 +5,6 @@ import { moviesReducer } from './reducers/moviesReducer';
 
 const reducer = combineReducers({
   favorites: favoritesReducer,
-  favoritesId: favoritesReducer,
   popular: moviesReducer,
 });
 

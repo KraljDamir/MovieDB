@@ -1,51 +1,19 @@
+import { combineReducers } from 'redux';
 import * as actions from '../actions/actionTypes';
 
-export const initialState = {
-  favoriteMovies: [],
-  favoriteMovieId: {},
-};
-
-export const favoritesReducer = (state = initialState, action) => {
+const favoriteMoviesIds = (state = [], action) => {
   switch (action.type) {
-    case actions.STORE_FAVORITE_ID:
-      return {
-        favoriteMovieId: action.payload.movieId,
-      };
-
     case actions.ADD_TO_FAV:
-      return {
-        ...state,
-        favoriteMovies: [...state.favoriteMovies, ...action.payload.movie],
-      };
+      return [...state, action.payload];
 
     case actions.REMOVE_FROM_FAV:
-      return {
-        ...state,
-        favoriteMovies: state.favoriteMovies.filter(
-          (movie) => movie !== action.payload.favoriteMovies
-        ),
-      };
+      return state.filter((id) => id !== action.payload);
 
     default:
       return state;
   }
 };
 
-// if (
-//   state.favoriteMovies
-//     .map((m) => Object.keys(m)[0])
-//     .includes(`${action.payload.id}`)
-// ) {
-//   return state;
-// }
-
-// if (state.favoriteMovies.find((id) => id === action.payload.id)) {
-//   const updatedMovies = [...state.favoriteMovies];
-//   updatedMovies.splice(action.payload.id);
-//   return { ...state, favoriteMovies: updatedMovies };
-// }
-
-// return {
-//   ...state,
-//   favoriteMovies: [...state.favoriteMovies, action.payload.id],
-// };
+export const favoritesReducer = combineReducers({
+  favoriteMoviesIds,
+});
